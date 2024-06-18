@@ -1,0 +1,22 @@
+{
+  "name": "makerspace-queue",
+  "version": "1.0.0",
+  "description": "Automate HBLL's Makerspace queue",
+  "main": "index.js",
+  "scripts": {
+    "test": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ThatLittleChicken/makerspace-queue.git"
+  },
+  "author": "Gent Yong",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ThatLittleChicken/makerspace-queue/issues"
+  },
+  "homepage": "https://github.com/ThatLittleChicken/makerspace-queue#readme",
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
