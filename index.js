@@ -23,7 +23,7 @@ app.post('/', async (req, res) => {
 });
 
 app.get('/recent', (_req, res) => {
-  res.send({ body: body });
+  res.send(body);
 });
 
 //Return the homepage if the path is unknown

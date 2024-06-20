@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/ThatLittleChicken/makerspace-queue#readme",
   "dependencies": {
-    "express": "^4.19.2"
+    "express": "^4.19.2",
+    "googleapis": "^140.0.0"
   }
 }
