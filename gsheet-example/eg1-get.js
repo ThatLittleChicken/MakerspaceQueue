@@ -1,5 +1,5 @@
 const { google } = require("googleapis");
-const auth = require("./credentials-load");
+const auth = require("../gapi-credentials-load");
 
 async function run() {
   //create sheets client
@@ -7,7 +7,7 @@ async function run() {
   //get a range of values
   const res = await sheets.spreadsheets.values.get({
     spreadsheetId: "1kN0h_cIYD3hXVbjN25dAvLbQDkcgIuIlHprRTBHEENg",
-    range: "In Queue!A1:P1"
+    range: "In Queue!A1:P2"
   });
   //print results
   console.log(JSON.stringify(res.data, null, 2));

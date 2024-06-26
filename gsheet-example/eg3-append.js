@@ -1,5 +1,5 @@
 const { google } = require("googleapis");
-const auth = require("./credentials-load");
+const auth = require("../gapi-credentials-load");
 
 async function run() {
   //create sheets client

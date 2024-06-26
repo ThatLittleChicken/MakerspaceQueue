@@ -4,4 +4,4 @@ async function getRecentPost() {
     document.getElementById("recent").innerText = JSON.stringify(recent);
 }
 
-getRecentPost();
+setInterval(getRecentPost(),1000);
