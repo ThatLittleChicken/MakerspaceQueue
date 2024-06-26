@@ -9,12 +9,11 @@ const spreadsheetId = {
 }
 
 async function getEmptyRow(sheetId) {
-    //get a range of values
     const res = await sheets.spreadsheets.values.get({
       spreadsheetId: sheetId,
       range: "In Queue!F3:F"
     });
-    //print results
+
     // const data = JSON.stringify(res.data, null, 2);
     // console.log(data)
 
