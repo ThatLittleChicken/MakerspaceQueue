@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/ThatLittleChicken/makerspace-queue#readme",
   "dependencies": {
-    "box-typescript-sdk-gen": "^1.1.0",
+    "box-node-sdk": "^3.6.0",
     "express": "^4.19.2",
     "googleapis": "^140.0.0"
   }
