@@ -34,7 +34,7 @@ async function fill() {
   // generate consent page url
   const url = oauth2Client.generateAuthUrl({
     access_type: "offline",
-    scope: ["https://www.googleapis.com/auth/spreadsheets"],
+    scope: ["https://www.googleapis.com/auth/spreadsheets", "https://www.googleapis.com/auth/drive"],
   });
   // url provides access, then returns a code
   console.log("Visit this url:\n%s", url);
