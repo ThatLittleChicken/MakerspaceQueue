@@ -20,7 +20,7 @@ var body;
 
 app.post('/', async (req, res) => {
   body = req.body;
-  updateSheets.updateSheets(body);
+  updateSheets(body);
   res.send(body);
 });
 

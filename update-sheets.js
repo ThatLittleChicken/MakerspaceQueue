@@ -3,7 +3,7 @@ const auth = require("./gapi-credentials-load");
 
 const date = new Date();
 const dd = String(date.getDate());
-const mm = String(date.getMonth() + 1).padStart(2, '0'); 
+const mm = String(date.getMonth() + 1); 
 const yy = date.getFullYear() - 2000;
 const today = mm + '/' + dd + '/' + yy;
 
@@ -50,12 +50,17 @@ async function updateRow(sheetId, row, values) {
     return res;
 }
 
-async function getFileName(fileId) {  
-    let res = await drive.files.get({ 
-        fileId: fileId
-    });
+async function getFileNames(fileIds) {  
+    let fileNames = [];
+    
+    for (let i = 0; i < fileIds.length; i++) {
+        let res = await drive.files.get({ 
+            fileId: fileIds[i]
+        });
+        fileNames.push(res.data.name);
+    }
   
-    return res.data.name;
+    return fileNames;
 }
   
 async function handler(data) {
@@ -65,29 +70,28 @@ async function handler(data) {
 
     console.log(data);
 
-    if (data["Files"].length !== 0) {
-        data["Files"].forEach(id => {
-            getFileName(id).then(fn => fileNames += fn + ', ');
-        });
-        fileNames = fileNames.substring(0, fileNames.length - 2);
-    }
+    getFileNames(data["Files"]).then(fns => {
+        fileNames = fns.join(", ");
 
-    if (data["Service"] == "3D Print") {
-        sheetId = spreadsheetId["3d"];
-        values = [null, null, null, null, today, "In Queue", data["Type"], null, data["Material"], null, data["First Name"] + ' ' + data["Last Name"], data["Email"], fileNames, data["Files"].length, "link", null, data["Specific Requests"]];
+        if (data["Service"] == "3D Print") {
+            sheetId = spreadsheetId["3d"];
+            values = [null, null, null, null, today, "In Queue", data["Type"], null, data["Material"], null, data["First Name"] + ' ' + data["Last Name"], data["Email"], fileNames, data["Files"].length, "link", null, data["Specific Requests"]];
+        } else if (data["Service"] == "Laser Cut") {
+            sheetId = spreadsheetId["laser"];
+            values = [null, null, null, null, today, "In Queue", null, data["First Name"] + ' ' + data["Last Name"], data["Email"], fileNames, "link", data["Source"], data["Material"], data["Specific Requests"]];
+        } else if (data["Service"] == "Poster") {
+            sheetId = spreadsheetId["poster"];
+            values = [null, null, null, null, today, "In Queue", data["Type"], null, data["First Name"] + ' ' + data["Last Name"], fileNames, "link", data["Type"] + ' ' + data["Specific Requests"], data["Width"], data["Height"], data["Files"].length];
+        } else {
+            throw new Error("Unknown service");
+        }
+
         getEmptyRow(sheetId).then(r => updateRow(sheetId, r, values));
-
-    } else if (data["Service"] == "Laser Cut") {
-
-    } else if (data["Service"] == "Poster") {
-
-    } else {
-        throw new Error("Unknown service");
-    }
+    });
 }
 
 async function updateSheets(data) {
     await handler(data);
 }
 
-module.exports = { updateSheets: updateSheets };
+module.exports = updateSheets;
