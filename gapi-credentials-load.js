@@ -28,12 +28,12 @@ auth.on('tokens', (tokens) => {
       refresh_token: tokens.refresh_token,
     };
     const str = JSON.stringify(creds, true, 2);
-    console.log(`Your 'gapi-credentials.json' has been set to: ${str}`);
+    //console.log(`Your 'gapi-credentials.json' has been set to: ${str}`);
     fs.writeFileSync("./gapi-credentials.json", str);
 
-    console.log(tokens.refresh_token);
+    //console.log(tokens.refresh_token);
   }
-  console.log(tokens.access_token);
+  //console.log(tokens.access_token);
 });
 
 auth.setCredentials({
