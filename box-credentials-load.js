@@ -41,11 +41,6 @@ sdk.getTokensRefreshGrant(creds.refreshToken, function(err, tokenInfo) {
   });
 });
 
-// client.folders.getItems(0,{
-//   usemarker: 'false',
-//   fields: 'name',
-//   offset: 0,
-//   limit: 25
-// }).then(items => console.log(items));
+client = sdk.getPersistentClient(creds);
 
 module.exports = client;

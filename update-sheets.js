@@ -9,9 +9,9 @@ const today = mm + '/' + dd + '/' + yy;
 
 const sheets = google.sheets({ version: "v4", auth });
 const spreadsheetId = { 
-    "3d" : "1kN0h_cIYD3hXVbjN25dAvLbQDkcgIuIlHprRTBHEENg", 
-    "laser" : "1fYLIYfgpsMatdU_0Yx0asM3B81-JFWs2cqIsEzxJ8f0", 
-    "poster" : "1g28e9iiXov1PLNtYomn2iKmvVLlHT75G7eV-bFDHG_c"
+    "3D Print" : "1kN0h_cIYD3hXVbjN25dAvLbQDkcgIuIlHprRTBHEENg", 
+    "Laser Cut" : "1fYLIYfgpsMatdU_0Yx0asM3B81-JFWs2cqIsEzxJ8f0", 
+    "Poster" : "1g28e9iiXov1PLNtYomn2iKmvVLlHT75G7eV-bFDHG_c"
 }
 
 const drive = google.drive({ version: 'v3', auth });
@@ -63,35 +63,35 @@ async function getFileNames(fileIds) {
     return fileNames;
 }
   
-async function handler(data) {
-    let values = [];
+async function convertToCells(data) {
     let fileNames = "";
-    let sheetId;
 
     console.log(data);
 
-    getFileNames(data["Files"]).then(fns => {
+    let values = await getFileNames(data["Files"]).then(fns => {
         fileNames = fns.join(", ");
 
+        let values = [];
         if (data["Service"] == "3D Print") {
-            sheetId = spreadsheetId["3d"];
             values = [null, null, null, null, today, "In Queue", data["Type"], null, data["Material"], null, data["First Name"] + ' ' + data["Last Name"], data["Email"], fileNames, data["Files"].length, "link", null, data["Specific Requests"]];
         } else if (data["Service"] == "Laser Cut") {
-            sheetId = spreadsheetId["laser"];
             values = [null, null, null, null, today, "In Queue", null, data["First Name"] + ' ' + data["Last Name"], data["Email"], fileNames, "link", data["Source"], data["Material"], data["Specific Requests"]];
         } else if (data["Service"] == "Poster") {
-            sheetId = spreadsheetId["poster"];
             values = [null, null, null, null, today, "In Queue", data["Type"], null, data["First Name"] + ' ' + data["Last Name"], fileNames, "link", data["Type"] + ' ' + data["Specific Requests"], data["Width"], data["Height"], data["Files"].length];
         } else {
             throw new Error("Unknown service");
         }
 
-        getEmptyRow(sheetId).then(r => updateRow(sheetId, r, values));
+        return values;
     });
+    
+    return values;
 }
 
 async function updateSheets(data) {
-    await handler(data);
+    let values = await convertToCells(data);
+    let sheetId = spreadsheetId[data["Service"]];
+    getEmptyRow(sheetId).then(r => updateRow(sheetId, r, values));
 }
 
 module.exports = updateSheets;
