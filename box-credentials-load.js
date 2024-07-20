@@ -1,4 +1,5 @@
-var BoxSDK = require('box-node-sdk');
+const { BoxOAuth, OAuthConfig, } = require('box-typescript-sdk-gen/lib/box/oauth.generated.js');
+const { BoxClient } = require('box-typescript-sdk-gen/lib/client.generated.js');
 const fs = require("fs");
 
 //load credentials some how...
@@ -13,15 +14,17 @@ if (creds.refreshToken === "...") {
 }
 
 // create new oauth client for the app
-const sdk = new BoxSDK({
-  clientID: creds.clientId,
+const config = new OAuthConfig({
+  clientId: creds.clientId,
   clientSecret: creds.clientSecret,
 });
 
-var client;
+const oauth = new BoxOAuth({ config: config });
+const client = new BoxClient(oauth);
 
-sdk.getTokensRefreshGrant(creds.refreshToken, function(err, tokenInfo) {
+client.authorization.refreshAccessToken(creds).then(tokenInfo => {
 
+  console.log(tokenInfo);
   const newCreds = {
     clientId: creds.clientId,
     clientSecret: creds.clientSecret,
@@ -32,15 +35,12 @@ sdk.getTokensRefreshGrant(creds.refreshToken, function(err, tokenInfo) {
   console.log(`Your 'box-credentials.json' has been set to: ${str}`);
   fs.writeFileSync("./box-credentials.json", str);
 
-  client = sdk.getPersistentClient(tokenInfo);
-  client.users.get(client.CURRENT_USER_ID, null, function(err, currentUser) {
-    if(err) {
-      console.log('Error!!!');
-    }
-    console.log('Hello, ' + currentUser.name + '!');
-  });
+  // client.users.getUserById(client.CURRENT_USER_ID, null, function(err, currentUser) {
+  //   if(err) {
+  //     console.log('Error!!!');
+  //   }
+  //   console.log('Hello, ' + currentUser.name + '!');
+  // });
 });
-
-client = sdk.getPersistentClient(creds);
 
 module.exports = client;

@@ -1,4 +1,4 @@
-var BoxSDK = require('box-node-sdk');
+const { BoxOAuth, OAuthConfig, } = require('box-typescript-sdk-gen/lib/box/oauth.generated.js');
 const fs = require("fs");
 const readline = require("readline");
 const rl = readline.createInterface({
@@ -18,10 +18,14 @@ async function fill() {
   const clientSecret = await question("Enter the client secret here: ");
 
   // create new oauth client for the app
-  const sdk = new BoxSDK({
-    clientID: clientId,
+  const config = new OAuthConfig({
+    clientId: clientId,
     clientSecret: clientSecret,
   });
+
+  const oauth = new BoxOAuth({ config: config });
+
+  console.log("test " + oauth.getAuthorizeUrl("http://localhost:8000"));
 
   // generate consent page url
   const url = `https://account.box.com/api/oauth2/authorize?client_id=${clientId}&redirect_uri=http://localhost:8000&response_type=code`;
@@ -34,9 +38,7 @@ async function fill() {
   console.log("Converting to refresh token...");
   
   // convert into refresh token
-  const resp = await sdk.getTokensAuthorizationCodeGrant(code, null, function (err, tokenInfo) {
-    var client = sdk.getPersistentClient(tokenInfo);
-  });
+  const resp = await oauth.getTokensAuthorizationCodeGrant(code);
 
   const creds = {
     clientId: clientId,
