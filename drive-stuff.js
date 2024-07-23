@@ -46,12 +46,10 @@ async function downloadFiles(fileIds) {
     for (let i = 0; i < fileIds.length; i++) {
         let fileName = await getFileName(fileIds[i]);
         await downloadFile(fileIds[i], fileName, tempid);
-        //await deleteFile(fileIds[i]);
+        await deleteFile(fileIds[i]);
         await filePaths.push(`./temp-files/${tempid}/${fileName}`);
     }
     return filePaths;
 }
 
-
-downloadFiles(["1x3dBFvY0DN73oWWOjopzR0PKxx2DAQkp"]).then(fp => console.log(fp));
-//module.exports = { downloadFiles }
+module.exports = { downloadFiles }
