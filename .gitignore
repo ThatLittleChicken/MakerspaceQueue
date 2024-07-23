@@ -2,3 +2,4 @@
 node_modules/
 gapi-credentials.json
 box-credentials.json
+temp-files/
