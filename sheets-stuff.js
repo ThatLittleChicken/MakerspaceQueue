@@ -1,12 +1,6 @@
 const { google } = require("googleapis");
 const auth = require("./gapi-credentials-load");
 
-const date = new Date();
-const dd = String(date.getDate());
-const mm = String(date.getMonth() + 1); 
-const yy = date.getFullYear() - 2000;
-const today = mm + '/' + dd + '/' + yy;
-
 const sheets = google.sheets({ version: "v4", auth });
 const spreadsheetId = { 
     "3D Print" : "1kN0h_cIYD3hXVbjN25dAvLbQDkcgIuIlHprRTBHEENg", 
@@ -15,6 +9,12 @@ const spreadsheetId = {
 }
 
 const drive = google.drive({ version: 'v3', auth });
+
+const date = new Date();
+const dd = String(date.getDate());
+const mm = String(date.getMonth() + 1); 
+const yy = date.getFullYear() - 2000;
+const today = mm + '/' + dd + '/' + yy;
 
 async function getEmptyRow(sheetId) {
     const res = await sheets.spreadsheets.values.get({
