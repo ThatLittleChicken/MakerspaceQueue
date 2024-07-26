@@ -63,7 +63,7 @@ async function getFileNames(fileIds) {
     return fileNames;
 }
   
-async function convertToCells(data) {
+async function convertToCells(data, boxLink) {
     let fileNames = "";
 
     console.log(data);
@@ -73,11 +73,11 @@ async function convertToCells(data) {
 
         let values = [];
         if (data["Service"] == "3D Print") {
-            values = [null, null, null, null, today, "In Queue", data["Type"], null, data["Material"], null, data["First Name"] + ' ' + data["Last Name"], data["Email"], fileNames, data["Files"].length, "link", null, data["Specific Requests"]];
+            values = [null, null, null, null, today, "In Queue", data["Type"], null, data["Material"], null, data["First Name"] + ' ' + data["Last Name"], data["Email"], fileNames, data["Files"].length, boxLink, null, data["Specific Requests"]];
         } else if (data["Service"] == "Laser Cut") {
-            values = [null, null, null, null, today, "In Queue", null, data["First Name"] + ' ' + data["Last Name"], data["Email"], fileNames, "link", data["Source"], data["Material"], data["Specific Requests"]];
+            values = [null, null, null, null, today, "In Queue", null, data["First Name"] + ' ' + data["Last Name"], data["Email"], fileNames, boxLink, data["Source"], data["Material"], data["Specific Requests"]];
         } else if (data["Service"] == "Poster") {
-            values = [null, null, null, null, today, "In Queue", data["Type"], null, data["First Name"] + ' ' + data["Last Name"], fileNames, "link", data["Type"] + ' ' + data["Specific Requests"], data["Width"], data["Height"], data["Files"].length];
+            values = [null, null, null, null, today, "In Queue", data["Type"], null, data["First Name"] + ' ' + data["Last Name"], fileNames, boxLink, data["Type"] + ' ' + data["Specific Requests"], data["Width"], data["Height"], data["Files"].length];
         } else {
             throw new Error("Unknown service");
         }
@@ -88,10 +88,10 @@ async function convertToCells(data) {
     return values;
 }
 
-async function updateSheets(data) {
-    let values = await convertToCells(data);
+async function updateSheets(data, boxLink) {
+    let values = await convertToCells(data, boxLink);
     let sheetId = spreadsheetId[data["Service"]];
     getEmptyRow(sheetId).then(r => updateRow(sheetId, r, values));
 }
 
-module.exports = updateSheets;
+module.exports = { updateSheets };

@@ -29,10 +29,16 @@ async function downloadFile(fileId, fileName, folderId) {
         .pipe(dest);
 }
 
-async function deleteFile(fileId) {
-    await drive.files.delete({ 
-        fileId: fileId
-    });
+async function deleteFiles(fileIds, filePaths) {
+    for (let i = 0; i < fileIds.length; i++) {
+        await drive.files.delete({ 
+            fileId: fileIds[i]
+        });
+    }
+    for (let i = 0; i < filePaths.length; i++) {
+        await fs.unlinkSync(filePaths[i]);
+    }
+    fs.rmdirSync(filePaths[0].substring(0, filePaths[0].lastIndexOf("/")), { recursive: true });
 }
 
 function createFolder(name) {
@@ -46,10 +52,9 @@ async function downloadFiles(fileIds) {
     for (let i = 0; i < fileIds.length; i++) {
         let fileName = await getFileName(fileIds[i]);
         await downloadFile(fileIds[i], fileName, tempid);
-        await deleteFile(fileIds[i]);
         await filePaths.push(`./temp-files/${tempid}/${fileName}`);
     }
     return filePaths;
 }
 
-module.exports = { downloadFiles }
+module.exports = { downloadFiles, deleteFiles }

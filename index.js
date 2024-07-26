@@ -1,5 +1,5 @@
 const express = require('express');
-const updateSheets = require('./update-sheets');
+const { handleData } = require('./handle-data');
 const app = express();
 
 app.use(express.json());
@@ -20,7 +20,7 @@ var body;
 
 app.post('/', async (req, res) => {
   body = req.body;
-  updateSheets(body);
+  handleData(body);
   res.send(body);
 });
 

@@ -70,11 +70,11 @@ async function getFolderLink(folderId) {
     return await url;
 }
 
-async function boxStuff(name, type, filePaths) {
+async function boxUpload(name, type, filePaths) {
     let folderId = await getFolder(name, type);
     let link = await getFolderLink(folderId);
     await uploadFile(folderId, filePaths);
     return link;
 }
 
-module.exports = { boxStuff }
+module.exports = { boxUpload }
