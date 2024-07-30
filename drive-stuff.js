@@ -38,7 +38,7 @@ async function deleteFiles(fileIds, filePaths) {
     for (let i = 0; i < filePaths.length; i++) {
         await fs.unlinkSync(filePaths[i]);
     }
-    fs.rmdirSync(filePaths[0].substring(0, filePaths[0].lastIndexOf("/")), { recursive: true });
+    fs.rmSync(filePaths[0].substring(0, filePaths[0].lastIndexOf("/")), { recursive: true });
 }
 
 function createFolder(name) {
