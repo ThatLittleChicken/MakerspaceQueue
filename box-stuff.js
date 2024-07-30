@@ -1,6 +1,6 @@
 var BoxSDK = require('box-node-sdk');
 const fs = require("fs");
-const client = require("./box-credentials-load");
+const { getBoxClient } = require("./box-credentials-load");
 
 const date = new Date();
 const dd = String(date.getDate());
@@ -13,6 +13,13 @@ const parentFolderId = {
     "Laser Cut" : "54496771414", 
     "Poster" : "137998902121"
 }
+
+let client;
+
+setInterval(() => { 
+    getBoxClient().then(c => { client = c; });
+}, 1000 * 60 * 30);
+
 
 async function getFolder(name, type) {
     let firstletterfolder = await client.search.query(`"${name.substring(0, 1)}"`, {
@@ -58,7 +65,7 @@ async function getFolder(name, type) {
 async function uploadFile(folderId, filePaths) {
     for (let i = 0; i < filePaths.length; i++) {
         let stream = fs.createReadStream(filePaths[i]);
-        let file = await client.files.uploadFile(folderId, filePaths[0].substring(filePaths[0].lastIndexOf("/") + 1), stream);
+        let file = await client.files.uploadFile(folderId, filePaths[i].substring(filePaths[i].lastIndexOf("/") + 1), stream);
     }
 }
 
@@ -71,6 +78,7 @@ async function getFolderLink(folderId) {
 }
 
 async function boxUpload(name, type, filePaths) {
+    client = await getBoxClient();
     let folderId = await getFolder(name, type);
     let link = await getFolderLink(folderId);
     await uploadFile(folderId, filePaths);

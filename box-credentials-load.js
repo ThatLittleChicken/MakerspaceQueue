@@ -1,26 +1,33 @@
 var BoxSDK = require('box-node-sdk');
 const fs = require("fs");
 
-//load credentials some how...
-let creds = null;
-try {
-  creds = require("./box-credentials.json");
-} catch (err) {
-  throw `Failed to load credentials.json: ${err}`;
+function getStoredCreds() {
+  let creds = null;
+
+  try {
+    creds = require("./box-credentials.json");
+  } catch (err) {
+    throw `Failed to load credentials.json: ${err}`;
+  }
+  if (creds.refreshToken === "...") {
+    throw `Please run 'node box-credentials-fill.js'`;
+  }
+  return creds;
 }
-if (creds.refreshToken === "...") {
-  throw `Please run 'node box-credentials-fill.js'`;
-}
 
-// create new oauth client for the app
-const sdk = new BoxSDK({
-  clientID: creds.clientId,
-  clientSecret: creds.clientSecret,
-});
+async function getBoxClient() {
+  //load credentials some how...
+  let creds = getStoredCreds();
 
-var client;
+  // create new oauth client for the app
+  const sdk = new BoxSDK({
+    clientID: creds.clientId,
+    clientSecret: creds.clientSecret,
+  });
 
-sdk.getTokensRefreshGrant(creds.refreshToken, function(err, tokenInfo) {
+  var client;
+
+  let tokenInfo = await sdk.getTokensRefreshGrant(creds.refreshToken);
 
   const newCreds = {
     clientId: creds.clientId,
@@ -32,15 +39,15 @@ sdk.getTokensRefreshGrant(creds.refreshToken, function(err, tokenInfo) {
   console.log(`Your 'box-credentials.json' has been set to: ${str}`);
   fs.writeFileSync("./box-credentials.json", str);
 
-  client = sdk.getPersistentClient(tokenInfo);
+  client = await sdk.getPersistentClient(getStoredCreds());
   client.users.get(client.CURRENT_USER_ID, null, function(err, currentUser) {
     if(err) {
       console.log('Error!!!');
     }
     console.log('Hello, ' + currentUser.name + '!');
   });
-});
 
-client = sdk.getPersistentClient(creds);
+  return await client;
+}
 
-module.exports = client;
+module.exports = { getBoxClient };
