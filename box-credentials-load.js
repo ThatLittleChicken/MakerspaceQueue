@@ -4,11 +4,7 @@ const fs = require("fs");
 function getStoredCreds() {
   let creds = null;
 
-  try {
-    creds = require("./box-credentials.json");
-  } catch (err) {
-    throw `Failed to load credentials.json: ${err}`;
-  }
+  creds = JSON.parse(fs.readFileSync('./box-credentials.json', 'utf8'));
   if (creds.refreshToken === "...") {
     throw `Please run 'node box-credentials-fill.js'`;
   }
@@ -27,26 +23,29 @@ async function getBoxClient() {
 
   var client;
 
-  let tokenInfo = await sdk.getTokensRefreshGrant(creds.refreshToken);
+  await sdk.getTokensRefreshGrant(creds.refreshToken).then(tokenInfo => {
 
-  const newCreds = {
-    clientId: creds.clientId,
-    clientSecret: creds.clientSecret,
-    ...tokenInfo,
-  };
+    const newCreds = {
+      clientId: creds.clientId,
+      clientSecret: creds.clientSecret,
+      ...tokenInfo,
+    };
 
-  const str = JSON.stringify(newCreds, true, 2);
-  console.log(`Your 'box-credentials.json' has been set to: ${str}`);
-  fs.writeFileSync("./box-credentials.json", str);
+    const str = JSON.stringify(newCreds, true, 2);
+    console.log(`Your 'box-credentials.json' has been set to: ${str}`);
+    fs.writeFileSync("./box-credentials.json", str);
 
-  client = await sdk.getPersistentClient(getStoredCreds());
-  client.users.get(client.CURRENT_USER_ID, null, function(err, currentUser) {
-    if(err) {
-      console.log('Error!!!');
-    }
-    console.log('Hello, ' + currentUser.name + '!');
+    client = sdk.getPersistentClient(tokenInfo);
+    client.users.get(client.CURRENT_USER_ID, null, function(err, currentUser) {
+      try {
+        console.log('Hello, ' + currentUser.name + '!');
+      } catch (err) {
+        console.log("Failed to get user info");
+      }
+    });
   });
 
+  client = await sdk.getPersistentClient(getStoredCreds());
   return await client;
 }
 
