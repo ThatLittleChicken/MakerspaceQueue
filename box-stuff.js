@@ -52,10 +52,26 @@ async function getFolder(name, type) {
     })
 
     let myTodayFolderId;
-    try {
-        todayFolder = await client.folders.create(myFolderId, today);
-        myTodayFolderId = await todayFolder.id;
-    } catch (err) {
+
+    if (todayFolder.total_count == 0) {
+        let i = 1;
+        while (true) {
+            try {
+                console.log("trying " + i);
+                if (i == 1) {
+                    todayFolder = await client.folders.create(myFolderId, today);
+                    myTodayFolderId = await todayFolder.id;
+                } else {
+                    todayFolder = await client.folders.create(myFolderId, today +" #" + i);
+                    myTodayFolderId = await todayFolder.id;
+                }
+            } catch (err) {
+                i++;
+                continue;
+            }
+            break;
+        }
+    } else {
         myTodayFolderId = todayFolder.entries[0].id;
     }
 
