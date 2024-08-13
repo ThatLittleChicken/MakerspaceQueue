@@ -32,7 +32,7 @@ async function getBoxClient() {
     };
 
     const str = JSON.stringify(newCreds, true, 2);
-    console.log(`Your 'box-credentials.json' has been set to: ${str}`);
+    //console.log(`Your 'box-credentials.json' has been set to: ${str}`);
     fs.writeFileSync("./box-credentials.json", str);
 
     client = sdk.getPersistentClient(tokenInfo);

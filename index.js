@@ -19,15 +19,17 @@ app.get('/config', (_req, res) => {
 });
 
 var body;
+var time;
 
 app.post('/data', async (req, res) => {
   body = req.body;
+  time = new Date();
   handleData(body);
   res.send(body);
 });
 
 app.get('/recent', (_req, res) => {
-  res.send(body);
+  res.send({ time, body });
 });
 
 app.get('/box', async (_req, res) => {

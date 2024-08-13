@@ -4,7 +4,7 @@ async function getRecentPost() {
     document.getElementById("recent").innerText = JSON.stringify(recent);
 }
 
-async function getBoxCreds() {
+function getBoxCreds() {
     window.location.href = "https://account.box.com/api/oauth2/authorize?client_id=253clye8usq2vhvqna7ro45g9tr1kzgg&redirect_uri=https://queue.hbllmakerspace.click/box&response_type=code";
 }
 

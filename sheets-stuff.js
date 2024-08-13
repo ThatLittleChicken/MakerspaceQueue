@@ -66,6 +66,7 @@ async function getFileNames(fileIds) {
 async function convertToCells(data, boxLink) {
     let fileNames = "";
 
+    console.log(today);
     console.log(data);
 
     let values = await getFileNames(data["Files"]).then(fns => {

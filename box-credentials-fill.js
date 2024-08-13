@@ -26,7 +26,7 @@ async function boxCredsFill(code) {
   };
 
   const str = JSON.stringify(credsNew, true, 2);
-  console.log(`Your 'gapi-credentials.json' has been set to: ${str}`);
+  console.log(`Your 'box-credentials.json' has been set to: ${str}`);
   fs.writeFileSync("./box-credentials.json", str);
 }
 
