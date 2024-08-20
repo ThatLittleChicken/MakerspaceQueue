@@ -1,10 +1,15 @@
 const { google } = require("googleapis");
 const fs = require("fs");
 const readline = require("readline");
+const dotenv = require('dotenv');
+
+dotenv.config();
+
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
 });
+
 const question = async text =>
   new Promise((resolve, reject) => {
     rl.question(text, result =>
@@ -23,12 +28,12 @@ const question = async text =>
 // 8. Run this script
 
 async function fill() {
-  const clientId = await question("Enter the client ID here: ");
-  const clientSecret = await question("Enter the client secret here: ");
+  //const clientId = await question("Enter the client ID here: ");
+  //const clientSecret = await question("Enter the client secret here: ");
   // create new oauth client for the app
   const oauth2Client = new google.auth.OAuth2(
-    clientId,
-    clientSecret,
+    process.env.GAPI_CLIENT_ID,
+    process.env.GAPI_CLIENT_SECRET,
     "urn:ietf:wg:oauth:2.0:oob"
   );
   // generate consent page url
@@ -44,8 +49,8 @@ async function fill() {
   // convert into refresh token
   const resp = await oauth2Client.getToken(code);
   const creds = {
-    client_id: clientId,
-    client_secret: clientSecret,
+    client_id: process.env.GAPI_CLIENT_ID,
+    client_secret: process.env.GAPI_CLIENT_SECRET,
     refresh_token: resp.tokens.refresh_token,
   };
   const str = JSON.stringify(creds, true, 2);

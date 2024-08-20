@@ -1,17 +1,12 @@
 var BoxSDK = require('box-node-sdk');
 const fs = require("fs");
+const dotenv = require('dotenv');
+dotenv.config();
 
 async function boxCredsFill(code) {
-  let creds = null;
-  try {
-    creds = require("./box-credentials.json");
-  } catch (err) {
-    throw `Failed to load credentials.json: ${err}`;
-  }
-
-  const sdk = new BoxSDK({
-    clientID: creds.clientId,
-    clientSecret: creds.clientSecret,
+    const sdk = new BoxSDK({
+    clientID: process.env.BOX_CLIENT_ID,
+    clientSecret: process.env.BOX_CLIENT_SECRET,
   });
   
   // convert into refresh token
@@ -20,8 +15,8 @@ async function boxCredsFill(code) {
   });
 
   const credsNew = {
-    clientId: creds.clientId,
-    clientSecret: creds.clientSecret,
+    clientId: process.env.BOX_CLIENT_ID,
+    clientSecret: process.env.BOX_CLIENT_SECRET,
     ...resp,
   };
 

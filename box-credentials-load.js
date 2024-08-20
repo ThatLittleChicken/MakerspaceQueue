@@ -1,5 +1,7 @@
 var BoxSDK = require('box-node-sdk');
 const fs = require("fs");
+const dotenv = require('dotenv');
+dotenv.config();
 
 function getStoredCreds() {
   let creds = null;
@@ -17,8 +19,8 @@ async function getBoxClient() {
 
   // create new oauth client for the app
   const sdk = new BoxSDK({
-    clientID: creds.clientId,
-    clientSecret: creds.clientSecret,
+    clientID: process.env.BOX_CLIENT_ID,
+    clientSecret: process.env.BOX_CLIENT_SECRET,
   });
 
   var client;
