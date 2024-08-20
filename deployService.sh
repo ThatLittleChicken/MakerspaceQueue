@@ -22,6 +22,7 @@ mkdir dist
 cp -r public dist
 cp *.json dist
 cp *.js dist
+cp .env dist
 
 # Step 2
 printf "\n----> Clearing out previous distribution on the target\n"
@@ -32,7 +33,7 @@ ENDSSH
 
 # Step 3
 printf "\n----> Copy the distribution package to the target\n"
-scp -r -i "$key" dist/* ubuntu@$hostname:$service
+scp -r -i "$key" dist/. ubuntu@$hostname:$service
 
 # Step 4
 printf "\n----> Deploy the service on the target\n"
