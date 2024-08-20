@@ -4,7 +4,7 @@ const fs = require("fs");
 //load credentials
 let creds = null;
 
-creds = JSON.parse(fs.readFileSync('./box-credentials.json', 'utf8'));
+creds = JSON.parse(fs.readFileSync('./gapi-credentials.json', 'utf8'));
 if (creds.refresh_token === "...") {
   throw `Please run 'node gapi-credentials-fill.js'`;
 }
