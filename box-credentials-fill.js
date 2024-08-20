@@ -12,6 +12,14 @@ async function boxCredsFill(code) {
   // convert into refresh token
   const resp = await sdk.getTokensAuthorizationCodeGrant(code, null, function (err, tokenInfo) {
     var client = sdk.getPersistentClient(tokenInfo);
+    
+    client.users.get(client.CURRENT_USER_ID, null, function(err, currentUser) {
+      try {
+        console.log('Hello, ' + currentUser.name + '!');
+      } catch (err) {
+        console.log("Failed to get user info");
+      }
+    });
   });
 
   const credsNew = {
@@ -21,7 +29,7 @@ async function boxCredsFill(code) {
   };
 
   const str = JSON.stringify(credsNew, true, 2);
-  console.log(`Your 'box-credentials.json' has been set to: ${str}`);
+  //console.log(`Your 'box-credentials.json' has been set to: ${str}`);
   fs.writeFileSync("./box-credentials.json", str);
 }
 
