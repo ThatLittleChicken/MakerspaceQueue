@@ -1,14 +1,18 @@
 const { google } = require("googleapis");
-const auth = require("./gapi-credentials-load");
+const { getGapiClient } = require("./gapi-credentials-load");
 
-const sheets = google.sheets({ version: "v4", auth });
 const spreadsheetId = { 
     "3D Print" : "1kN0h_cIYD3hXVbjN25dAvLbQDkcgIuIlHprRTBHEENg", 
     "Laser Cut" : "1fYLIYfgpsMatdU_0Yx0asM3B81-JFWs2cqIsEzxJ8f0", 
     "Poster" : "1g28e9iiXov1PLNtYomn2iKmvVLlHT75G7eV-bFDHG_c"
 }
 
-const drive = google.drive({ version: 'v3', auth });
+let drive;
+let sheets;
+getGapiClient().then(auth => {
+    drive = google.drive({ version: 'v3', auth });
+    sheets = google.sheets({ version: 'v4', auth });
+});
 
 const date = new Date();
 const dd = String(date.getDate());

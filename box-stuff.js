@@ -57,11 +57,11 @@ async function getFolder(name, type) {
         let i = 1;
         while (true) {
             try {
-                console.log("trying " + i);
                 if (i == 1) {
                     todayFolder = await client.folders.create(myFolderId, today);
                     myTodayFolderId = await todayFolder.id;
                 } else {
+                    console.log("trying " + i);
                     todayFolder = await client.folders.create(myFolderId, today +" #" + i);
                     myTodayFolderId = await todayFolder.id;
                 }

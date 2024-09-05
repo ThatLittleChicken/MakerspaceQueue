@@ -1,9 +1,19 @@
 const { google } = require("googleapis");
-const auth = require("./gapi-credentials-load");
+const { getGapiClient } = require("./gapi-credentials-load");
 const fs = require("fs");
 const { v4: uuidv4 } = require('uuid');
+const { get } = require("http");
 
-const drive = google.drive({ version: 'v3', auth });
+let drive;
+getGapiClient().then(auth => {
+    drive = google.drive({ version: 'v3', auth });
+});
+
+setInterval(() => { 
+    getGapiClient().then(auth => {
+        drive = google.drive({ version: 'v3', auth });
+    });
+}, 1000 * 60 * 30);
 
 async function getFileName(fileId) {
     let res = await drive.files.get({ 
