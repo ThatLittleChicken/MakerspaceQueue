@@ -23,7 +23,7 @@ const today = mm + '/' + dd + '/' + yy;
 async function getEmptyRow(sheetId) {
     const res = await sheets.spreadsheets.values.get({
       spreadsheetId: sheetId,
-      range: "In Queue!F3:F"
+      range: "In Queue!G3:G"
     });
 
     // const data = JSON.stringify(res.data, null, 2);

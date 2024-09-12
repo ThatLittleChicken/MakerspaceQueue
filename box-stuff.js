@@ -81,7 +81,13 @@ async function getFolder(name, type) {
 async function uploadFile(folderId, filePaths) {
     for (let i = 0; i < filePaths.length; i++) {
         let stream = fs.createReadStream(filePaths[i]);
-        let file = await client.files.uploadFile(folderId, filePaths[i].substring(filePaths[i].lastIndexOf("/") + 1), stream);
+        let fileSize = fs.statSync(filePaths[i]).size;
+        if (fileSize > 100000000) {
+            let file = await client.files.getChunkedUploader(folderId, fileSize, filePaths[i].substring(filePaths[i].lastIndexOf("/") + 1), stream);
+            await file.start();
+        } else {
+            let file = await client.files.uploadFile(folderId, filePaths[i].substring(filePaths[i].lastIndexOf("/") + 1), stream);
+        }
     }
 }
 
