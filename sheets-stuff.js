@@ -14,11 +14,11 @@ getGapiClient().then(auth => {
     sheets = google.sheets({ version: 'v4', auth });
 });
 
-const date = new Date();
-const dd = String(date.getDate());
-const mm = String(date.getMonth() + 1); 
-const yy = date.getFullYear() - 2000;
-const today = mm + '/' + dd + '/' + yy;
+let date = new Date();
+let dd = String(date.getDate());
+let mm = String(date.getMonth() + 1); 
+let yy = date.getFullYear() - 2000;
+let today = mm + '/' + dd + '/' + yy;
 
 async function getEmptyRow(sheetId) {
     const res = await sheets.spreadsheets.values.get({

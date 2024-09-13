@@ -23,20 +23,43 @@ async function getFileName(fileId) {
 }
 
 async function downloadFile(fileId, fileName, folderId) {
-    let dest = fs.createWriteStream(`./temp-files/${folderId}/${fileName}`);
-    let res = await drive.files.get({ 
-        fileId: fileId,
-        alt: 'media'
-    }, { responseType: 'stream' });
+    // let dest = fs.createWriteStream(`./temp-files/${folderId}/${fileName}`);
+    // let res = await drive.files.get({ 
+    //     fileId: fileId,
+    //     alt: 'media'
+    // }, { responseType: 'stream' });
 
-    res.data
-        .on('end', () => {
-            console.log('Done downloading file');
-        })
-        .on('error', err => {
-            console.error('Error downloading file');
-        })
-        .pipe(dest);
+    // await res.data
+    //     .on('end', () => {
+    //         console.log('Done downloading file');
+    //     })
+    //     .on('error', err => {
+    //         console.error('Error downloading file');
+    //     })
+    //     .pipe(dest);
+    
+    return new Promise((resolve, reject) => {
+        drive.files.get({ 
+            fileId: fileId,
+            alt: 'media'
+        }, { responseType: 'stream' }, (err, res) => {
+            if (err) {
+                console.error('Error downloading file');
+                reject(err);
+            }
+            const dest = fs.createWriteStream(`./temp-files/${folderId}/${fileName}`);
+            res.data
+                .on('end', () => {
+                    console.log('Done downloading file');
+                    resolve();
+                })
+                .on('error', err => {
+                    console.error('Error downloading file');
+                    reject(err);
+                })
+                .pipe(dest);
+        });
+    })
 }
 
 async function deleteFiles(fileIds, filePaths) {

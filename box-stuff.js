@@ -2,11 +2,11 @@ var BoxSDK = require('box-node-sdk');
 const fs = require("fs");
 const { getBoxClient } = require("./box-credentials-load");
 
-const date = new Date();
-const dd = String(date.getDate());
-const mm = String(date.getMonth() + 1); 
-const yy = date.getFullYear() - 2000;
-const today = mm + '.' + dd + '.' + yy;
+let date = new Date();
+let dd = String(date.getDate());
+let mm = String(date.getMonth() + 1); 
+let yy = date.getFullYear() - 2000;
+let today = mm + '.' + dd + '.' + yy;
 
 const parentFolderId = { 
     "3D Print" : "138623403868", 
@@ -84,7 +84,7 @@ async function uploadFile(folderId, filePaths) {
         let fileSize = fs.statSync(filePaths[i]).size;
         if (fileSize > 100000000) {
             let file = await client.files.getChunkedUploader(folderId, fileSize, filePaths[i].substring(filePaths[i].lastIndexOf("/") + 1), stream);
-            await file.start();
+            file.start();
         } else {
             let file = await client.files.uploadFile(folderId, filePaths[i].substring(filePaths[i].lastIndexOf("/") + 1), stream);
         }
