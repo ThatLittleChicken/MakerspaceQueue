@@ -73,16 +73,18 @@ async function convertToCells(data, boxLink) {
     console.log(today);
     console.log(data);
 
+    let academic = data["Academic"] == "Yes" ? "Y" : "";
+
     let values = await getFileNames(data["Files"]).then(fns => {
         fileNames = fns.join(", ");
 
         let values = [];
         if (data["Service"] == "3D Print") {
-            values = [null, null, null, null, today, "Forms", "Pending", data["Type"], null, data["Material"], null, data["First Name"] + ' ' + data["Last Name"], data["Email"], fileNames, data["Files"].length, boxLink, null, "Send confirmation email. " + data["Specific Requests"]];
+            values = [null, null, null, null, today, "Forms", "Pending", data["Type"], null, data["Material"], academic, data["First Name"] + ' ' + data["Last Name"], data["Email"], fileNames, data["Files"].length, boxLink, null, "Send confirmation email. " + data["Specific Requests"]];
         } else if (data["Service"] == "Laser Cut") {
-            values = [null, null, null, null, today, "Forms", "Pending", null, data["First Name"] + ' ' + data["Last Name"], data["Email"], fileNames, boxLink, data["Source"], data["Material"], "Send confirmation email. " + data["Specific Requests"]];
+            values = [null, null, null, null, today, "Forms", "Pending", academic, data["First Name"] + ' ' + data["Last Name"], data["Email"], fileNames, boxLink, data["Source"], data["Material"], "Send confirmation email. " + data["Specific Requests"]];
         } else if (data["Service"] == "Poster") {
-            values = [null, null, null, null, today, "Forms", "Pending", null, data["First Name"] + ' ' + data["Last Name"], data["Email"], fileNames, boxLink, data["Type"] + '. ' + "Send confirmation email. " + data["Specific Requests"], data["Width"], data["Height"], data["Files"].length];
+            values = [null, null, null, null, today, "Forms", "Pending", academic, data["First Name"] + ' ' + data["Last Name"], data["Email"], fileNames, boxLink, data["Type"] + '. ' + "Send confirmation email. " + data["Specific Requests"], data["Width"], data["Height"], data["Files"].length];
         } else {
             throw new Error("Unknown service");
         }
