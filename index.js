@@ -53,7 +53,7 @@ app.get('/gapi', async (_req, res) => {
   if (!_req.query.code) {
     res.status(400);
     res.send({ message: 'No code provided' });
-  } else if (_req.query.scope !== 'https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/spreadsheets') {
+  } else if (_req.query.scope !== 'https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/spreadsheets' && _req.query.scope !== 'https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/drive') {
     res.status(400);
     res.send({ message: 'Invalid scope, not all services granted' });
   } else {

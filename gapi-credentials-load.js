@@ -32,7 +32,7 @@ auth.on('tokens', (tokens) => {
     };
     const str = JSON.stringify(creds, true, 2);
     console.log(`Gapi refresh token renewed`);
-    fs.writeFileSync("./gapi-credentials.json", str);
+    fs.writeFile("./gapi-credentials.json", str);
 
     auth.setCredentials({
       refresh_token: tokens.refresh_token,
