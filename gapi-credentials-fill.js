@@ -1,70 +1,36 @@
 const { google } = require("googleapis");
 const fs = require("fs");
-const readline = require("readline");
 const dotenv = require('dotenv');
 
 dotenv.config();
 
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout,
-});
-
-const question = async text =>
-  new Promise((resolve, reject) => {
-    rl.question(text, result =>
-      result ? resolve(result) : reject("Nothing entered")
-    );
-  });
-
-// Client ID and client secret are available at
-// 1. Go to https://console.cloud.google.com/apis/dashboard
-// 2. Click "Enable APIs and Services"
-// 3. Search "Sheets"
-// 4. Click "Enable"
-// 5. Go to https://console.developers.google.com/apis/credentials/oauthclient
-// 6. IMPORTANT: Choose "Desktop app" and choose a name
-// 7. Should find a form with: Client ID, Client secret
-// 8. Run this script
-
-async function fill() {
-  //const clientId = await question("Enter the client ID here: ");
-  //const clientSecret = await question("Enter the client secret here: ");
-  // create new oauth client for the app
+async function gapiCredsFill(code) {
   const oauth2Client = new google.auth.OAuth2(
     process.env.GAPI_CLIENT_ID,
     process.env.GAPI_CLIENT_SECRET,
-    "urn:ietf:wg:oauth:2.0:oob"
+    "https://queue.hbllmakerspace.click/gapi"
+    //"http://localhost:3000/gapi"
   );
-  // generate consent page url
+
+  /*
   const url = oauth2Client.generateAuthUrl({
     access_type: "offline",
     scope: ["https://www.googleapis.com/auth/spreadsheets", "https://www.googleapis.com/auth/drive"],
   });
-  // url provides access, then returns a code
   console.log("Visit this url:\n%s", url);
-  // paste in code
-  const code = await question("Enter the code here: ");
-  console.log("Converting to refresh token...");
-  // convert into refresh token
+  */
+
   const resp = await oauth2Client.getToken(code);
   const creds = {
     client_id: process.env.GAPI_CLIENT_ID,
     client_secret: process.env.GAPI_CLIENT_SECRET,
     refresh_token: resp.tokens.refresh_token,
   };
+  
   const str = JSON.stringify(creds, true, 2);
-  console.log(`Your 'gapi-credentials.json' has been set to: ${str}`);
+  //console.log(`Your 'gapi-credentials.json' has been set to: ${str}`);
+  console.log(`Gapi refresh token set`);
   fs.writeFileSync("./gapi-credentials.json", str);
 }
 
-fill().then(
-  () => {
-    console.log("done");
-    rl.close();
-  },
-  err => {
-    console.error("ERR", err);
-    rl.close();
-  }
-);
+module.exports = { gapiCredsFill };

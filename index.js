@@ -1,6 +1,7 @@
 const express = require('express');
 const { handleData } = require('./handle-data');
 const { boxCredsFill } = require('./box-credentials-fill');
+const { gapiCredsFill } = require('./gapi-credentials-fill');
 const app = express();
 
 app.use(express.json());
@@ -41,6 +42,25 @@ app.get('/box', async (_req, res) => {
       boxCredsFill(_req.query.code);
       res.status(200);
       res.send({ message: 'Box credentials have been filled' });
+    } catch (err) {
+      res.status(500);
+      res.send({ message: err });
+    }
+  }
+});
+
+app.get('/gapi', async (_req, res) => {
+  if (!_req.query.code) {
+    res.status(400);
+    res.send({ message: 'No code provided' });
+  } else if (_req.query.scope !== 'https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/spreadsheets') {
+    res.status(400);
+    res.send({ message: 'Invalid scope, not all services granted' });
+  } else {
+    try {
+      gapiCredsFill(_req.query.code);
+      res.status(200);
+      res.send({ message: 'GAPI credentials have been filled' });
     } catch (err) {
       res.status(500);
       res.send({ message: err });

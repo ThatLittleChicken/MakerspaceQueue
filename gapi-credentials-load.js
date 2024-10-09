@@ -18,7 +18,8 @@ function getStoredCreds() {
 const auth = new google.auth.OAuth2(
   process.env.GAPI_CLIENT_ID,
   process.env.GAPI_CLIENT_SECRET,
-  "urn:ietf:wg:oauth:2.0:oob"
+  "https://queue.hbllmakerspace.click/gapi"
+  //"http://localhost:3000/gapi"
 );
 
 auth.on('tokens', (tokens) => {
