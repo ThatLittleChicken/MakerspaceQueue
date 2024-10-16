@@ -9,10 +9,16 @@ const spreadsheetId = {
 
 let drive;
 let sheets;
-getGapiClient().then(auth => {
-    drive = google.drive({ version: 'v3', auth });
-    sheets = google.sheets({ version: 'v4', auth });
-});
+
+async function initClient() {
+    return new Promise((resolve, reject) => {
+        getGapiClient().then(auth => {
+            drive = google.drive({ version: 'v3', auth });
+            sheets = google.sheets({ version: 'v4', auth });
+            resolve();
+        });
+    });
+}
 
 let date = new Date();
 let dd = String(date.getDate());
@@ -96,6 +102,7 @@ async function convertToCells(data, boxLink) {
 }
 
 async function updateSheets(data, boxLink) {
+    await initClient();
     let values = await convertToCells(data, boxLink);
     let sheetId = spreadsheetId[data["Service"]];
     getEmptyRow(sheetId).then(r => updateRow(sheetId, r, values));

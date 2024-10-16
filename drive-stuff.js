@@ -5,15 +5,19 @@ const { v4: uuidv4 } = require('uuid');
 const { get } = require("http");
 
 let drive;
-getGapiClient().then(auth => {
-    drive = google.drive({ version: 'v3', auth });
-});
 
 setInterval(() => { 
-    getGapiClient().then(auth => {
-        drive = google.drive({ version: 'v3', auth });
-    });
+    initClient();
 }, 1000 * 60 * 30);
+
+async function initClient() {
+    return new Promise((resolve, reject) => {
+        getGapiClient().then(auth => {
+            drive = google.drive({ version: 'v3', auth });
+            resolve();
+        });
+    });
+}
 
 async function getFileName(fileId) {
     let res = await drive.files.get({ 
@@ -23,21 +27,6 @@ async function getFileName(fileId) {
 }
 
 async function downloadFile(fileId, fileName, folderId) {
-    // let dest = fs.createWriteStream(`./temp-files/${folderId}/${fileName}`);
-    // let res = await drive.files.get({ 
-    //     fileId: fileId,
-    //     alt: 'media'
-    // }, { responseType: 'stream' });
-
-    // await res.data
-    //     .on('end', () => {
-    //         console.log('Done downloading file');
-    //     })
-    //     .on('error', err => {
-    //         console.error('Error downloading file');
-    //     })
-    //     .pipe(dest);
-    
     return new Promise((resolve, reject) => {
         drive.files.get({ 
             fileId: fileId,
@@ -63,6 +52,7 @@ async function downloadFile(fileId, fileName, folderId) {
 }
 
 async function deleteFiles(fileIds, filePaths) {
+    initClient();
     for (let i = 0; i < fileIds.length; i++) {
         await drive.files.delete({ 
             fileId: fileIds[i]
@@ -81,6 +71,7 @@ function createFolder(name) {
 async function downloadFiles(fileIds) {
     let filePaths = [];
     let tempid = uuidv4();
+    await initClient();
     createFolder("./temp-files/" + tempid);
     for (let i = 0; i < fileIds.length; i++) {
         let fileName = await getFileName(fileIds[i]);
