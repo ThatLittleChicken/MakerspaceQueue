@@ -10,6 +10,8 @@ const spreadsheetId = {
 let drive;
 let sheets;
 
+let today = getToday();
+
 async function initClient() {
     return new Promise((resolve, reject) => {
         getGapiClient().then(auth => {
@@ -20,11 +22,13 @@ async function initClient() {
     });
 }
 
-let date = new Date();
-let dd = String(date.getDate());
-let mm = String(date.getMonth() + 1); 
-let yy = date.getFullYear() - 2000;
-let today = mm + '/' + dd + '/' + yy;
+function getToday() {
+    let date = new Date();
+    let dd = String(date.getDate());
+    let mm = String(date.getMonth() + 1);
+    let yy = date.getFullYear() - 2000;
+    return mm + '/' + dd + '/' + yy;
+}
 
 async function getEmptyRow(sheetId) {
     const res = await sheets.spreadsheets.values.get({
@@ -102,6 +106,7 @@ async function convertToCells(data, boxLink) {
 }
 
 async function updateSheets(data, boxLink) {
+    today = getToday();
     await initClient();
     let values = await convertToCells(data, boxLink);
     let sheetId = spreadsheetId[data["Service"]];

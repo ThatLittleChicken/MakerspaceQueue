@@ -2,11 +2,21 @@ var BoxSDK = require('box-node-sdk');
 const fs = require("fs");
 const { getBoxClient } = require("./box-credentials-load");
 
-let date = new Date();
-let dd = String(date.getDate());
-let mm = String(date.getMonth() + 1); 
-let yy = date.getFullYear() - 2000;
-let today = mm + '.' + dd + '.' + yy;
+// let date = new Date();
+// let dd = String(date.getDate());
+// let mm = String(date.getMonth() + 1); 
+// let yy = date.getFullYear() - 2000;
+// let today = mm + '.' + dd + '.' + yy;
+
+let today = getToday();
+
+function getToday() {
+    let date = new Date();
+    let dd = String(date.getDate());
+    let mm = String(date.getMonth() + 1);
+    let yy = date.getFullYear() - 2000;
+    return mm + '.' + dd + '.' + yy;
+}
 
 const parentFolderId = { 
     "3D Print" : "138623403868", 
@@ -100,6 +110,7 @@ async function getFolderLink(folderId) {
 }
 
 async function boxUpload(name, type, filePaths) {
+    today = getToday();
     client = await getBoxClient();
     let folderId = await getFolder(name, type);
     let link = await getFolderLink(folderId);
