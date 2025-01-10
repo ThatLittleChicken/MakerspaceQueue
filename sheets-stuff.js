@@ -92,7 +92,7 @@ async function convertToCells(data, boxLink) {
         if (data["Service"] == "3D Print") {
             values = [null, null, null, null, today, "Forms", "Pending", data["Type"], null, data["Material"], academic, data["First Name"] + ' ' + data["Last Name"], data["Email"], fileNames, data["Files"].length, boxLink, null, "Send confirmation email. " + data["Specific Requests"]];
         } else if (data["Service"] == "Laser Cut") {
-            values = [null, null, null, null, today, "Forms", "Pending", academic, data["First Name"] + ' ' + data["Last Name"], data["Email"], fileNames, boxLink, data["Source"], data["Material"], "Send confirmation email. " + data["Specific Requests"]];
+            values = [null, null, null, null, today, "Forms", "Pending", academic, data["First Name"] + ' ' + data["Last Name"], data["Email"], fileNames, boxLink, data["Files"].length, data["Source"], data["Material"], "Send confirmation email. " + data["Specific Requests"]];
         } else if (data["Service"] == "Poster") {
             values = [null, null, null, null, today, "Forms", "Pending", data["Type"], academic, data["First Name"] + ' ' + data["Last Name"], data["Email"], fileNames, boxLink, "Send confirmation email. " + data["Specific Requests"], data["Width"], data["Height"], data["Files"].length];
         } else {
