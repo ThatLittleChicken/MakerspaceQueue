@@ -1,0 +1,32 @@
+title Makerspace Queue Automator
+
+actor Person
+
+participant Google
+participant Google Forms
+participant Service
+participant Box
+
+Person->Google:Upload Files in Google Forms
+
+Person->Google Forms:Submits Forms
+
+Google Forms->Service:Sends Webhook
+
+Google<-Service:Request Files and File Names from Google Drive
+
+Google-->Service:File and Files Names
+
+Box<-Service:Create Folders
+
+Box-->Service:Folders IDs
+
+Box<-Service:Upload Files
+
+Box<-Service:Request Shared Link
+
+Box-->Service:Shared Link
+
+Google<-Service:Add queue item in Google Sheets
+
+Service->Service:Delete Files
