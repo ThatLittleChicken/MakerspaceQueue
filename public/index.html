@@ -4,16 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Makerspace Queue Automator</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <h1>Hello!</h1>
     <h2>Makerspace Queue Automator Panel</h2>
-    <p>Most recent submission:</p>
-    <p id="recent"></p>
     <p>Only login Box if you have access to the Makerspace folder and only login to google with the Makerspace account.</p>
     <button id="boxAuth" onclick="getBoxCreds()">Box Login</button>
     <button id="gapiAuth" onclick="getGapiCreds()">Google Login</button>
     <br>
+    <br>
+    <p>Most recent submission:</p>
+    <p id="recent"></p>
     <br>
     <a href="https://github.com/ThatLittleChicken/MakerspaceQueue">Github Repo</a>
     <script src="index.js"></script>
